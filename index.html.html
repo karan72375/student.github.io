@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Availability Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Weekly Availability Form</h2>
+        <form id="availabilityForm" method="post">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="startOfWeek">Start of the week:</label>
+            <input type="text" id="startOfWeek" name="startOfWeek" value="" readonly>
+
+            <label for="monday">Monday:</label>
+            <select id="monday" name="monday">
+                <option value="Not Available" selected>Not Available</option>
+                <option value="Available">Available</option>
+            </select>
+            <input type="time" id="monday_start" name="monday_start" style="display:none;">
+            <input type="time" id="monday_end" name="monday_end" style="display:none;">
+
+            <input type="text" id="monday_hours" name="monday_hours" readonly>
+
+            <!-- Repeat the same pattern for other days -->
+            <label for="tuesday">Tuesday:</label>
+            <select id="tuesday" name="tuesday">
+                <option value="Not Available" selected>Not Available</option>
+                <option value="Available">Available</option>
+            </select>
+            <input type="time" id="tuesday_start" name="tuesday_start" style="display:none;">
+            <input type="time" id="tuesday_end" name="tuesday_end" style="display:none;">
+
+            <input type="text" id="tuesday_hours" name="tuesday_hours" readonly>
+
+            <label for="wednesday">Wednesday:</label>
+            <select id="wednesday" name="wednesday">
+                <option value="Not Available" selected>Not Available</option>
+                <option value="Available">Available</option>
+            </select>
+            <input type="time" id="wednesday_start" name="wednesday_start" style="display:none;">
+            <input type="time" id="wednesday_end" name="wednesday_end" style="display:none;">
+
+            <input type="text" id="wednesday_hours" name="wednesday_hours" readonly>
+
+            <label for="thursday">Thursday:</label>
+            <select id="thursday" name="thursday">
+                <option value="Not Available" selected>Not Available</option>
+                <option value="Available">Available</option>
+            </select>
+            <input type="time" id="thursday_start" name="thursday_start" style="display:none;">
+            <input type="time" id="thursday_end" name="thursday_end" style="display:none;">
+
+            <input type="text" id="thursday_hours" name="thursday_hours" readonly>
+
+            <label for="friday">Friday:</label>
+            <select id="friday" name="friday">
+                <option value="Not Available" selected>Not Available</option>
+                <option value="Available">Available</option>
+            </select>
+            <input type="time" id="friday_start" name="friday_start" style="display:none;">
+            <input type="time" id="friday_end" name="friday_end" style="display:none;">
+
+            <input type="text" id="friday_hours" name="friday_hours" readonly>
+
+
+
+            <label for="sunday">Sunday:</label>
+            <select id="sunday" name="sunday">
+                <option value="Not Available" selected>Not Available</option>
+                <option value="Available">Available</option>
+            </select>
+            <input type="time" id="sunday_start" name="sunday_start" style="display:none;">
+            <input type="time" id="sunday_end" name="sunday_end" style="display:none;">
+
+            <input type="text" id="sunday_hours" name="sunday_hours" readonly>
+
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        // Function to calculate the difference between two time values in hours
+        function calculateHours(start, end) {
+            var startTime = new Date("1970-01-01T" + start);
+            var endTime = new Date("1970-01-01T" + end);
+            var diff = endTime - startTime - (15 * 60 * 1000); // Subtract 15 minutes
+            var hours = diff / (1000 * 60 * 60); // Convert to hours
+            return hours;
+        }
+
+        // Function to update the hours input element for each day
+        function updateHoursInput(daySelect) {
+            var startTimeInput = document.getElementById(daySelect.id + "_start");
+            var endTimeInput = document.getElementById(daySelect.id + "_end");
+            var hoursInput = document.getElementById(daySelect.id + "_hours");
+            if (daySelect.value === "Available") {
+                startTimeInput.style.display = "block";
+                endTimeInput.style.display = "block";
+                hoursInput.style.display = "block";
+                var start = startTimeInput.value;
+                var end = endTimeInput.value;
+                var hours = calculateHours(start, end); // Call the calculateHours function
+                hoursInput.value = hours.toFixed(2); // Set the value of the hours input element with two decimal places
+            } else {
+                startTimeInput.style.display = "none";
+                endTimeInput.style.display = "none";
+                hoursInput.style.display = "none";
+                hoursInput.value = ""; // Clear the value
+            }
+        }
+
+        // Function to toggle visibility of start and end time inputs based on the selected option
+        function toggleTimeInputs(daySelect) {
+            var startTimeInput = document.getElementById(daySelect.id + "_start");
+            var endTimeInput = document.getElementById(daySelect.id + "_end");
+            var hoursInput = document.getElementById(daySelect.id + "_hours");
+            if (daySelect.value === "Available") {
+                startTimeInput.style.display = "block";
+                endTimeInput.style.display = "block";
+                hoursInput.style.display = "block";
+            } else {
+                startTimeInput.style.display = "none";
+                endTimeInput.style.display = "none";
+                hoursInput.style.display = "none";
+                hoursInput.value = ""; // Clear the value
+            }
+            updateHoursInput(daySelect); // Call the updateHoursInput function
+        }
+
+        // Function to return the date of the next Monday
+        function getNextMonday() {
+            var today = new Date(); // Get the current date
+            var day = today.getDay(); // Get the current day of the week (0 for Sunday, 1 for Monday, etc.)
+            var diff = 7 - day; // Calculate the difference between the current day and the next Sunday
+            var nextMonday = new Date(today); // Create a new date object with the same value as today
+            nextMonday.setDate(today.getDate() + diff); // Add the difference to the date to get the next Monday
+            return nextMonday;
+        }
+
+        // Update Next Monday input field with dynamic value
+        document.getElementById("startOfWeek").value = getNextMonday().toISOString().split('T')[0];
+
+        // Add event listeners to all day select elements
+        var daySelects = document.querySelectorAll('[id$="day"]');
+        daySelects.forEach(function (select) {
+            toggleTimeInputs(select); // Initial state
+            select.addEventListener("change", function () {
+                toggleTimeInputs(select);
+            });
+        });
+
+        // Add event listeners to all start and end time input elements
+        var timeInputs = document.querySelectorAll('[id$="_start"], [id$="_end"]');
+        timeInputs.forEach(function (input) {
+            input.addEventListener("change", function () {
+                var daySelect = document.getElementById(input.id.split("_")[0]); // Get the corresponding day select element
+                updateHoursInput(daySelect); // Call the updateHoursInput function
+            });
+        });
+    </script>
+
+
+</body>
+
+</html>
